@@ -5,25 +5,34 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
 
 @Getter
 @Setter
-public class PrincipalDetails implements UserDetails {
+public class PrincipalDetails implements UserDetails, OAuth2User {
 
     private static final long serialVersionUID = 1L;
-    private User user;
 
-    public PrincipalDetails(User user){
+    private User user;
+    private Map<String, Object> attributes;
+
+    public PrincipalDetails(User user) {
+        this.user = user;
+    }
+
+    public PrincipalDetails(User user, Map<String, Object> attributes) {
         this.user = user;
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection<? extends GrantedAuthority> getAuthorities(){
         Collection<GrantedAuthority> collector = new ArrayList<>();
-        collector.add(() -> {
+        collector.add(()->  {
             return user.getRole();
         });
         return collector;
@@ -58,4 +67,15 @@ public class PrincipalDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+    @Override
+    public Map<String, Object> getAttributes(){
+        return attributes;
+    }
+
+    @Override
+    public String getName(){
+        return (String) attributes.get("name");
+    }
+
+
 }

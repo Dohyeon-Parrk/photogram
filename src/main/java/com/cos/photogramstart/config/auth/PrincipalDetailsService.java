@@ -19,7 +19,7 @@ public class PrincipalDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //log.info(">>>>>>>>>>> 로그인 실행 :: " + username);
         User userEntity = userRepository.findByUsername(username);
 
@@ -28,7 +28,7 @@ public class PrincipalDetailsService implements UserDetailsService {
         if(userEntity == null){
             return null;
         }else {
-            return new PrincipalDetails(userEntity);
+            return new PrincipalDetails(userEntity);    // SecurityContextHolder  => Authentication 객체 내부에 담김
         }
     }
 }
